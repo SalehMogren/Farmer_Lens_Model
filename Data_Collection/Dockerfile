@@ -14,7 +14,7 @@ RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
 
 # Install Python dependencies.
-ADD requirements.txt /app/requirements.txt
+ADD /home/runner/work/Farmer_Lens_Models/Farmer_Lens_Models/Data_Collection/requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 
