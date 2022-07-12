@@ -1,3 +1,4 @@
+import os
 from time import sleep
 import requests
 from bs4 import BeautifulSoup
@@ -15,8 +16,7 @@ from selenium.common.exceptions import TimeoutException
 from cloud_storage import upload_blob_from_memory
 from tempfile import TemporaryFile, NamedTemporaryFile
 BUCKET_NAME = 'dataset_collection'
-
-
+POSTS_LIMIT = os.environ['POSTS_LIMIT']
 def haraj_scrapper(query: str, folder_location: str):
     search = "تمر سكري مفتل"  # search whatever you want
     query.replace(' ', '%20')
@@ -40,7 +40,7 @@ def haraj_scrapper(query: str, folder_location: str):
     posts_num = 0
 
     """ going to bottom and pressing read more to view all the posts """
-    while posts_num < 10:  # change to how many posts you want (chose a number that is a multiple of 20 )
+    while posts_num < POSTS_LIMIT:  # change to how many posts you want (chose a number that is a multiple of 20 )
         sleep(2)
         bottom.click()
         try:
