@@ -1,6 +1,6 @@
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.8
+FROM python:3.8-buster
 
 # Install manually all the missing libraries
 RUN apt-get update
