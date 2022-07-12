@@ -14,7 +14,7 @@ RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
 
 # Install Python dependencies.
-
+RUN ls
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
