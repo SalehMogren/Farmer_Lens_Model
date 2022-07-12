@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build . -t $IMAGE_NAME -f 'Data Collection/Dockerfile'
+        run: docker build . -t $IMAGE_NAME -f 'Data_Collection/Dockerfile'
 
       - name: Test Docker image
         run: docker run $IMAGE_NAME sh -c "go test -v"

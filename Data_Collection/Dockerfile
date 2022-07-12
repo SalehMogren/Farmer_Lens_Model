@@ -10,7 +10,8 @@ RUN apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 l
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
-WORKDIR "/Data Collection"
+RUN pwd
+WORKDIR /Data_Collection
 # Install Python dependencies.
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
