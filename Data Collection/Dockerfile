@@ -14,11 +14,9 @@ RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# GCP auth 
-RUN gcloud auth login
-RUN gcloud auth activate-service-account $GCP_SERVICE_ACCOUNT --key-file=$GCP_SERVICE_ACCOUNT_KEY
+
 # Copy local code to the container image.
-ENV APP_HOME /Data Collection
+ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . .
 
