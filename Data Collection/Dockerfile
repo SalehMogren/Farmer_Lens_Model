@@ -1,6 +1,6 @@
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.7
+FROM python:3.8
 
 # Install manually all the missing libraries
 RUN apt-get update
