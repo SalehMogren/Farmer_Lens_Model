@@ -10,14 +10,15 @@ RUN apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 l
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
+WORKDIR "/Data Collection"
 # Install Python dependencies.
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
+# # Copy local code to the container image.
+# ENV APP_HOME /app
+# WORKDIR $APP_HOME
 COPY . .
 
 # Run the web service on container startup. Here we use the gunicorn
