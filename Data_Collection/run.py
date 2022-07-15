@@ -1,3 +1,4 @@
+from datetime import datetime
 import imp
 from scrapper import haraj_scrapper
 from flask import Flask
@@ -18,3 +19,4 @@ def hello_world():
     for date in DATES_TYPES:
         # Run HARAJ Scrapper
         haraj_scrapper(date['query'], date['type'])
+    print(f'Scrapping Finished on {datetime.now()}')
