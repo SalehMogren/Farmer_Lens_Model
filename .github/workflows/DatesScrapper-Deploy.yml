@@ -3,6 +3,7 @@ name: Docker
 on:
   push:
     branches: [main]
+    paths: ["Data_Collection/**"]
   pull_request:
     branches: [main]
 
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
-      POSTS_LIMIT: {{secrets.POSTS_LIMIT}}
+      POSTS_LIMIT: { { secrets.POSTS_LIMIT } }
     steps:
       - name: Login
         uses: google-github-actions/setup-gcloud@v0
