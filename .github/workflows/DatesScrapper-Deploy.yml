@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+      POSTS_LIMIT: {{secrets.POSTS_LIMIT}}
     steps:
       - name: Login
         uses: google-github-actions/setup-gcloud@v0
@@ -33,4 +34,4 @@ jobs:
         run: docker push $IMAGE_NAME
 
       - name: Deploy Docker image
-        run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region europe-west3 --platform managed
+        run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --update-env-vars POSTS_LIMIT=$POSTS_LIMIT --region europe-west3 --platform managed
