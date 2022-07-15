@@ -14,16 +14,16 @@ RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
 
 
 # Install Python dependencies.
-ADD /home/runner/work/Farmer_Lens_Models/Farmer_Lens_Models/Data_Collection/requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+COPY /Data_Collection/requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 
 # # Copy local code to the container image.
 
-COPY . /app
+COPY /Data_Collection/ /app
 WORKDIR /app
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:run
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 2 run:app

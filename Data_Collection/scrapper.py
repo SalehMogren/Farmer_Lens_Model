@@ -15,8 +15,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from cloud_storage import upload_blob_from_memory
 from tempfile import TemporaryFile, NamedTemporaryFile
+import chromedriver_binary
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("window-size=1024,768")
+chrome_options.add_argument("--no-sandbox")
 BUCKET_NAME = 'dataset_collection'
-POSTS_LIMIT = os.environ['POSTS_LIMIT']
+POSTS_LIMIT = int(os.environ['POSTS_LIMIT'])
+browser = webdriver.Chrome(chrome_options=chrome_options)
 def haraj_scrapper(query: str, folder_location: str):
     search = "تمر سكري مفتل"  # search whatever you want
     query.replace(' ', '%20')
@@ -29,9 +37,7 @@ def haraj_scrapper(query: str, folder_location: str):
 
     """ downloading the main page """
     # browser = webdriver.Chrome(ChromeDriverManager().install())
-    browser = webdriver.Chrome(ChromeDriverManager().install())
     browser.implicitly_wait(5)
-    browser.maximize_window()
     browser.get(url)
     sleep(5)
     bottom = browser.find_element(

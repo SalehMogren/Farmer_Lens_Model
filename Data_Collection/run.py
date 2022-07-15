@@ -1,4 +1,8 @@
+import imp
 from scrapper import haraj_scrapper
+from flask import Flask
+
+app = Flask(__name__)
 
 DATES_TYPES = [
     {"query": 'تمر سكري', "type": 'sukkari'},
@@ -9,7 +13,8 @@ DATES_TYPES = [
     {"query": 'تمر عجوة', "type": 'ajwa'},
     {"query": 'تمر خلاص', "type": 'khulas'},
 ]
-
-for date in DATES_TYPES:
-    # Run HARAJ Scrapper
-    haraj_scrapper(date['query'], date['type'])
+@app.route("/")
+def hello_world():
+    for date in DATES_TYPES:
+        # Run HARAJ Scrapper
+        haraj_scrapper(date['query'], date['type'])
