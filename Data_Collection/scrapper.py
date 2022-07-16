@@ -24,11 +24,13 @@ chrome_options.add_argument("window-size=1024,768")
 chrome_options.add_argument("--no-sandbox")
 BUCKET_NAME = 'dataset_collection'
 POSTS_LIMIT = int(os.environ['POSTS_LIMIT'])
-browser = webdriver.Chrome(chrome_options=chrome_options)
+
+
 def haraj_scrapper(query: str, folder_location: str):
     search = "تمر سكري مفتل"  # search whatever you want
     query.replace(' ', '%20')
     # url=f"https://haraj.com.sa/search/{search.split(' ')[0]}%20{search.split(' ')[1]}%20{search.split(' ')[2]}"
+    browser = webdriver.Chrome(chrome_options=chrome_options)
     url = f"https://haraj.com.sa/search/{query}"
 
     """
@@ -107,3 +109,4 @@ def haraj_scrapper(query: str, folder_location: str):
         img.save(bytes, 'jpeg')
         upload_blob_from_memory(
             BUCKET_NAME, bytes.getvalue(), f'{folder_location}/{img_name}')
+    browser.quit()
