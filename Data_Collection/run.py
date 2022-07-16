@@ -1,7 +1,6 @@
 from datetime import datetime
-import requests
 from scrapper import haraj_scrapper
-from flask import Flask
+from flask import Flask,request
 
 app = Flask(__name__)
 
@@ -18,7 +17,7 @@ DATES_TYPES = [
 
 @app.route("/", methods=['POST'])
 def hello_world():
-    if requests.method == 'POST':
+    if request.method == 'POST':
         try:
 
             for date in DATES_TYPES:
