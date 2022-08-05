@@ -17,7 +17,7 @@ def download_model_file():
     from google.cloud import storage
 
     # Model Bucket details
-    BUCKET_NAME        = os.environ['BUCKET_NAME']
+    BUCKET_NAME        = os.environ['MODEL_BUCKET']
     PROJECT_ID         = os.environ["GCP_PROJECT_ID"]
     GCS_MODEL_FILE     = os.environ["MODEL_NAME"]
 
@@ -67,7 +67,7 @@ def download_image(image_path:str):
 
     storage_client = storage.Client()
 
-    bucket = storage_client.bucket(os.environ["IMAGE_BUCKETS"])
+    bucket = storage_client.bucket(os.environ["IMAGE_BUCKET"])
     blob = bucket.blob(image_path)
     destinatoin = '/tmp/image.jpg'
     blob.download_to_filename(destinatoin)
