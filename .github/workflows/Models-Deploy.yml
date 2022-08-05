@@ -33,7 +33,6 @@ jobs:
         with:
           name: "dates_prediction"
           runtime: "python310"
-          project_id: $GCP_PROJECT_ID
           region: "europe-west3"
           env_vars: MODEL_BUCKET=$MODEL_BUCKET,GCP_PROJECT_ID=$GCP_PROJECT_ID,MODEL_NAME=$MODEL_NAME,IMAGE_BUCKET=$IMAGE_BUCKET
           source_dir: Model/predict_funciton
