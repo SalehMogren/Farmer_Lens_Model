@@ -1,10 +1,11 @@
+from msilib.schema import Error
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 from PIL import Image
 import os
 from google.cloud import storage
-
+import functions_framework
 
 
 ## Gloabl model variable
@@ -72,7 +73,17 @@ def download_image(image_path:str):
     blob.download_to_filename(destinatoin)
     return destinatoin
 
+@functions_framework.http
 def predict_request(request):
+    """HTTP Cloud Function.
+    Args:
+        request (flask.Request): The request object.
+        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+    """
     global model
     if not model:
         download_model_file()
@@ -81,11 +92,17 @@ def predict_request(request):
     # Get image from request 
     params = request.get_json()
     if (params is not None) and ('img' in params):
-        # get image from storage bucket
-        local_image_path = download_image(params['img'])
-        img = Image.open(local_image_path)
+        try:
+                
+            # get image from storage bucket
+            local_image_path = download_image(params['img'])
+            img = Image.open(local_image_path)
 
-        # get prediction
-        pred_type = predict(model=model,image=img)
-        return pred_type
+            # get prediction
+            pred_type = predict(model=model,image=img)
+            return pred_type,200
+        except Exception as e:
+            return f'Error happend while proccessing the prediction Details : {e}'
+    else:
+        return "couldn't proccess prediction",400
 

@@ -4,3 +4,5 @@ numpy
 scikit-learn
 tensorflow
 tensorflow_hub
+flask 
+functions_framework
