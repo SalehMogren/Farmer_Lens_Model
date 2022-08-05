@@ -14,6 +14,7 @@ model = None
 
 
 def download_model_file():
+    """Download the model from GCP bucket"""
 
     from google.cloud import storage
 
@@ -39,6 +40,8 @@ def download_model_file():
 
 
 def load_model(path: str):
+    """Load model from the tmp directory """
+
     model = tf.keras.models.load_model(
         path, custom_objects={'KerasLayer': hub.KerasLayer}, compile=False)
     model.build((None, 224, 224, 3))
@@ -46,6 +49,7 @@ def load_model(path: str):
 
 
 def process_image(imageNp):
+    """Pre-proccess image and convert to numpy array """
     #     Convert to TF
     imageNp = tf.cast(imageNp, tf.float32)
     imageNp = tf.image.resize(imageNp, (224, 224))
@@ -56,6 +60,8 @@ def process_image(imageNp):
 
 
 def predict(image: Image, model):
+    """Predict the date type """
+
     test_image = np.asarray(image)
     processed_test_image = process_image(test_image)
     processed_test_image = np.expand_dims(processed_test_image, axis=0)
@@ -68,7 +74,7 @@ def predict(image: Image, model):
 
 
 def download_image(image_path: str):
-    """Downloads a blob from the bucket."""
+    """Download image from the bucket."""
 
     storage_client = storage.Client()
 
@@ -81,14 +87,10 @@ def download_image(image_path: str):
 
 @functions_framework.http
 def predict_request(request):
-    """HTTP Cloud Function.
-    Args:
-        request (flask.Request): The request object.
-        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
-    Returns:
-        The response text, or any set of values that can be turned into a
-        Response object using `make_response`
-        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+    """Main entry point for the serverless function
+    1 - get model 
+    2 - get image 
+    3 - get predction
     """
     global model
     if not model:
