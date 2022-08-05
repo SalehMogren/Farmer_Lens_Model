@@ -1,0 +1,39 @@
+on:
+  push:
+    branches: [main]
+    paths: ["Model/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  job_id:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    env:
+      MODEL_BUCKET: ${{ secrets.MODEL_BUCKET }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      MODEL_NAME: ${{ secrets.MODEL_NAME }}
+      IMAGE_BUCKET: ${{ secrets.IMAGE_BUCKET }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - id: "deploy"
+        uses: "google-github-actions/deploy-cloud-functions@v0"
+        with:
+          name: "dates_prediction"
+          runtime: "python310"
+          region: "europe-west3"
+          env_vars: MODEL_BUCKET=$MODEL_BUCKET,GCP_PROJECT_ID=$GCP_PROJECT_ID,MODEL_NAME=$MODEL_NAME,IMAGE_BUCKET=$IMAGE_BUCKET
+          source_dir: Model/predict_funciton
+      # Example of using the output
+      - id: "test"
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
