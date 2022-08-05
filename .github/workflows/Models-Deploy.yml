@@ -1,3 +1,5 @@
+name: Model Function Deployment
+
 on:
   push:
     branches: [main]
