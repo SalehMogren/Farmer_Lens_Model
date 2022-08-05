@@ -10,7 +10,6 @@ import functions_framework
 # Gloabl model variable
 model = None
 
-
 def download_model_file():
     """Download the model from GCP bucket"""
 

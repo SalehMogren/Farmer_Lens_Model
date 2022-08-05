@@ -13,11 +13,6 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    env:
-      MODEL_BUCKET: ${{ secrets.MODEL_BUCKET }}
-      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      MODEL_NAME: ${{ secrets.MODEL_NAME }}
-      IMAGE_BUCKET: ${{ secrets.IMAGE_BUCKET }}
 
     steps:
       - uses: actions/checkout@v3
@@ -32,12 +27,12 @@ jobs:
         uses: "google-github-actions/deploy-cloud-functions@v0"
         with:
           name: "dates_prediction"
-          runtime: "python310"
+          runtime: "python38"
           region: "europe-west3"
-          env_vars: MODEL_BUCKET=$MODEL_BUCKET,GCP_PROJECT_ID=$GCP_PROJECT_ID,MODEL_NAME=$MODEL_NAME,IMAGE_BUCKET=$IMAGE_BUCKET
+          env_vars: MODEL_BUCKET=${{ secrets.MODEL_BUCKET }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},MODEL_NAME=${{ secrets.MODEL_NAME }},IMAGE_BUCKET=${{ secrets.IMAGE_BUCKET }}
           source_dir: Model/predict_funciton
           entry_point: predict_request
-          timeout: 120
+          timeout: 180
       # Example of using the output
       - id: "test"
         run: 'curl "${{ steps.deploy.outputs.url }}"'
