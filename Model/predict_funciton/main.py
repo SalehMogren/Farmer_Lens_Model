@@ -1,3 +1,5 @@
+from operator import mod
+from urllib.request import Request
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
@@ -10,15 +12,16 @@ import functions_framework
 model = None
 
 
+
 def download_model_file():
     """Download the model from GCP bucket"""
 
     from google.cloud import storage
 
     # Model Bucket details
-    BUCKET_NAME = os.environ['MODEL_BUCKET']
-    PROJECT_ID = os.environ["GCP_PROJECT_ID"]
-    GCS_MODEL_FILE = os.environ["MODEL_NAME"]
+    BUCKET_NAME = os.environ.get('MODEL_BUCKET')
+    PROJECT_ID = os.environ.get("GCP_PROJECT_ID")
+    GCS_MODEL_FILE = os.environ.get("MODEL_NAME")
 
     # Initialise a client
     client = storage.Client(PROJECT_ID)
@@ -33,7 +36,7 @@ def download_model_file():
     if not os.path.exists(folder):
         os.makedirs(folder)
     # Download the file to a destination
-    blob.download_to_filename(folder + GCS_MODEL_FILE)
+    blob.download_to_filename(folder+'model.h5')
 
 
 def load_model(path: str):
@@ -75,7 +78,8 @@ def download_image(image_path: str):
 
     storage_client = storage.Client()
 
-    bucket = storage_client.bucket(os.environ["IMAGE_BUCKET"])
+    bucket = storage_client.bucket(os.environ.get(
+        "IMAGE_BUCKET"))
     blob = bucket.blob(image_path)
     destinatoin = '/tmp/image.jpg'
     blob.download_to_filename(destinatoin)
@@ -92,7 +96,7 @@ def predict_request(request):
     global model
     if not model:
         download_model_file()
-        model = load_model(f'/tmp/{os.environ["MODEL_NAME"]}')
+        model = load_model('tmp/model.h5')
 
     # Get image from request
     params = request.get_json()
