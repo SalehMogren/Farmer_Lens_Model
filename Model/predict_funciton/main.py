@@ -94,7 +94,7 @@ def predict_request(request):
     global model
     if not model:
         download_model_file()
-        model = load_model('tmp/model.h5')
+        model = load_model('/tmp/model.h5')
 
     # Get image from request
     params = request.get_json()
