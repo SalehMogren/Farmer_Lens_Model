@@ -2,7 +2,8 @@ google_cloud_storage==2.4.0
 pandas
 numpy
 scikit-learn
-tensorflow
+tensorflow==2.9.1
 tensorflow_hub
 flask 
 functions_framework
+Pillow==9.1.0

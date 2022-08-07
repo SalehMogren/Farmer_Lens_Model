@@ -1,5 +1,3 @@
-from operator import mod
-from urllib.request import Request
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
@@ -86,7 +84,7 @@ def download_image(image_path: str):
     return destinatoin
 
 
-@functions_framework.http
+# @functions_framework.http
 def predict_request(request):
     """Main entry point for the serverless function
     1 - get model 
