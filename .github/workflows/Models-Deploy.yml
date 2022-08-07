@@ -32,6 +32,7 @@ jobs:
           env_vars: MODEL_BUCKET=${{ secrets.MODEL_BUCKET }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},MODEL_NAME=${{ secrets.MODEL_NAME }},IMAGE_BUCKET=${{ secrets.IMAGE_BUCKET }}
           source_dir: Model/predict_funciton
           entry_point: predict_request
+          memory_mb: 2048
           timeout: 180
       # Example of using the output
       - id: "test"
