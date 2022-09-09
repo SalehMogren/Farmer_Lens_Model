@@ -1,14 +1,16 @@
 import tensorflow as tf
 import tensorflow_hub as hub
-import numpy as np
-from PIL import Image
 import os
 from google.cloud import storage
-import functions_framework
+import json
 
 # Gloabl model variable
 model = None
 
+img_height = 224
+img_width = 224
+LABELS_FILE_PATH = 'Model\predict_funciton\label_map.json'
+TOP_k = 3
 
 
 def download_model_file():
@@ -46,26 +48,16 @@ def load_model(path: str):
     return model
 
 
-def process_image(imageNp):
-    """Pre-proccess image and convert to numpy array """
-    #     Convert to TF
-    imageNp = tf.cast(imageNp, tf.float32)
-    imageNp = tf.image.resize(imageNp, (224, 224))
-    imageNp /= 255
-    #     Convert to NP
-    imageNp = imageNp.numpy()
-    return
-
-
-def predict(image: Image, model):
+def predict(img_path, model):
     """Predict the date type """
-
-    test_image = np.asarray(image)
-    processed_test_image = process_image(test_image)
-    processed_test_image = np.expand_dims(processed_test_image, axis=0)
-    probs = model.predict(processed_test_image)
+    img = tf.keras.utils.load_img(
+        img_path, target_size=(img_height, img_width))
+    img_path, target_size = (img_height, img_width)
+    img_array = tf.keras.utils.img_to_array(img)
+    img_array = tf.expand_dims(img_array, 0)  # Create a bat
+    probs = model.predict(img_array)
     probs = probs[0].tolist()
-    prob, i = tf.math.top_k(probs, k=3)
+    prob, i = tf.math.top_k(probs, k=TOP_k)
     probs = prob.numpy().tolist()
     classes = i.numpy().tolist()
     return probs, classes
@@ -90,6 +82,7 @@ def predict_request(request):
     1 - get model 
     2 - get image 
     3 - get predction
+    4 - transalte prediction
     """
     global model
     if not model:
@@ -100,15 +93,20 @@ def predict_request(request):
     params = request.get_json()
     if (params is not None) and ('img' in params):
         try:
-
             # get image from storage bucket
-            local_image_path = download_image(params['img'])
-            img = Image.open(local_image_path)
-
+            image_bucket_path = params['img']
+            local_image_path = download_image(image_bucket_path)
             # get prediction
-            pred_type = predict(model=model, image=img)
-            return pred_type, 200
+            probs, classes = predict(model=model, img_path=local_image_path)
+            # translate prediction results
+            results = {}
+            with open(LABELS_FILE_PATH, 'r')as f:
+                class_names = json.load(f)
+            for i in range(TOP_k):
+                results[class_names[str(classes[i])]] = probs[i]
+            response = {'img': image_bucket_path, 'results': results}
+            return response, 200
         except Exception as e:
-            return f'Error happend while proccessing the prediction Details : {e}'
+            return f'Error happend while proccessing the prediction Details : {e.with_traceback()}'
     else:
         return "couldn't proccess prediction", 400
