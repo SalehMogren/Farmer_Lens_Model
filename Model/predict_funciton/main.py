@@ -9,7 +9,7 @@ model = None
 
 img_height = 224
 img_width = 224
-LABELS_FILE_PATH = 'Model\predict_funciton\label_map.json'
+LABELS_FILE_PATH = './label_map.json'
 TOP_k = 3
 
 
